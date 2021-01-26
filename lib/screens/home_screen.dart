@@ -1,18 +1,15 @@
-// ignore: unused_import
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-// ignore: unused_import
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:movieapp/providers/movie_item_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../themes/theme_config.dart';
 import '../models/movie_item.dart';
+import '../providers/movie_item_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);

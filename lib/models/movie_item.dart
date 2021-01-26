@@ -57,7 +57,3 @@ class MovieItem {
         endDate = json['attributes']['endDate'],
         youtubeId = json['attributes']['youtubeVideoId'];
 }
-
-//(json['attributes']['coverImage']['small']).toString().isNotEmpty
-// ? json['attributes']['coverImage']['small']
-//  : "no cover available"
