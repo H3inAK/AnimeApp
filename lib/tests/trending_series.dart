@@ -29,7 +29,6 @@ class _TrendingSeriesState extends State<TrendingSeries> {
                     widget.seriesType.toLowerCase(), initOffset),
             builder: (ctx, dataSnapShot) {
               if (dataSnapShot.connectionState == ConnectionState.waiting) {
-                // print(MediaQuery.of(context).size.width);
                 return Center(
                   child: CircularProgressIndicator(),
                 );

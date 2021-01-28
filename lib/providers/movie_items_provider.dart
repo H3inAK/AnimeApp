@@ -66,6 +66,22 @@ class MovieItemsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> searchAndSetSeries(String query) async {
+    final url = "https://kitsu.io/api/edge/anime?filter[text]=$query";
+    final response = await http.get(url);
+    final responseData = jsonDecode(response.body)["data"] as List<dynamic>;
+    // print(responseData);
+
+    _movieItems.clear();
+    responseData.forEach((movieItem) {
+      _movieItems.add(MovieItem.fromJson(movieItem));
+    });
+    _movieItems.forEach((movieItem) {
+      print(movieItem.title);
+    });
+    notifyListeners();
+  }
+
   MovieItem findById(String id) {
     return _movieItems.firstWhere((movieItem) => movieItem.id == id);
   }
