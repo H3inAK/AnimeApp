@@ -36,6 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       throw (e);
     }
+    // Dio doesn't return String insted json
+    // cause just because of accept type form kisu api
     // try {
     //   Dio dio = Dio();
     //   final response = await dio.get(

@@ -17,11 +17,11 @@ ThemeData pinkTheme = lightTheme.copyWith(
   //   foregroundColor: Color(0xFF24737c),
   //   backgroundColor: Color(0xFFA6E0DE),
   // ),
-  textTheme: TextTheme(
-    bodyText1: TextStyle(
-      color: Colors.red,
-    ),
-  ),
+  // textTheme: TextTheme(
+  //   bodyText1: TextStyle(
+  //     color: Colors.red,
+  //   ),
+  // ),
 );
 
 ThemeData halloweenTheme = lightTheme.copyWith(
@@ -36,9 +36,9 @@ ThemeData halloweenTheme = lightTheme.copyWith(
 ThemeData darkBlueTheme = darkTheme.copyWith(
   primaryColor: Color(0xFF1E1E2C),
   scaffoldBackgroundColor: Color(0xFF2D2D44),
-  textTheme: TextTheme(
-    bodyText1: TextStyle(
-      color: Color(0xFF33E1Ed),
-    ),
-  ),
+  // textTheme: TextTheme(
+  //   bodyText1: TextStyle(
+  //     color: Color(0xFF33E1Ed),
+  //   ),
+  // ),
 );
