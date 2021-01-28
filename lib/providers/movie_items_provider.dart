@@ -30,6 +30,42 @@ class MovieItemsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> fetchAndSetPopularMovieItems(String category, int offset,
+      [int limit = 10]) async {
+    final url =
+        "https://kitsu.io/api/edge/$category?page[limit]=$limit&page[offset]=$offset&sort=popularityRank";
+    final response = await http.get(url);
+    final responseData = jsonDecode(response.body)["data"] as List<dynamic>;
+    // print(responseData);
+
+    _movieItems.clear();
+    responseData.forEach((movieItem) {
+      _movieItems.add(MovieItem.fromJson(movieItem));
+    });
+    _movieItems.forEach((movieItem) {
+      print(movieItem.title);
+    });
+    notifyListeners();
+  }
+
+  Future<void> fetchAndSetTrendingSeries(String category, int offset,
+      [int limit = 10]) async {
+    final url =
+        "https://kitsu.io/api/edge/trending/$category?page[limit]=$limit&page[offset]=$offset";
+    final response = await http.get(url);
+    final responseData = jsonDecode(response.body)["data"] as List<dynamic>;
+    // print(responseData);
+
+    _movieItems.clear();
+    responseData.forEach((movieItem) {
+      _movieItems.add(MovieItem.fromJson(movieItem));
+    });
+    _movieItems.forEach((movieItem) {
+      print(movieItem.title);
+    });
+    notifyListeners();
+  }
+
   MovieItem findById(String id) {
     return _movieItems.firstWhere((movieItem) => movieItem.id == id);
   }

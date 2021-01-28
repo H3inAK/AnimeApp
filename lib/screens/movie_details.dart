@@ -14,7 +14,7 @@ class MovieDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var displayedMovieDetail =
         Provider.of<MovieItemsProvider>(context).findById(movieId);
-    // print(displayedMovieDetail.coverImage);
+    print(displayedMovieDetail.id);
 
     return Scaffold(
       appBar: AppBar(
@@ -61,6 +61,9 @@ class MovieDetailsScreen extends StatelessWidget {
                     child: Image.network(
                       displayedMovieDetail.coverImage,
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Center(
+                        child: Text("cover image couldn't be loaded!"),
+                      ),
                     ),
                   )
                 : Text("No Cover Photo"),
@@ -69,8 +72,10 @@ class MovieDetailsScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               RatingBar.builder(
-                initialRating:
-                    (double.parse(displayedMovieDetail.averageRating) / 10) / 2,
+                initialRating: displayedMovieDetail.averageRating != null
+                    ? (double.parse(displayedMovieDetail.averageRating) / 10) /
+                        2
+                    : 0,
                 minRating: 1,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
@@ -108,7 +113,8 @@ class MovieDetailsScreen extends StatelessWidget {
           Text(displayedMovieDetail.description),
           SizedBox(height: 20),
           Text(
-            "Age rating     : " + displayedMovieDetail.ageRatingGuide,
+            "Age rating Guide     : " +
+                displayedMovieDetail.ageRatingGuide.toString(),
             style: Theme.of(context).textTheme.caption.copyWith(
                   color: Colors.amber,
                   fontSize: 16,

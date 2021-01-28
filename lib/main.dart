@@ -3,34 +3,37 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import './themes/theme_config.dart';
+import './themes/theme_service.dart';
 import './providers/movie_item_provider.dart';
 import './providers/movie_items_provider.dart';
-import './tests/test_api.dart';
+import './screens/home_screen.dart';
 
-void main() {
+void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarColor: Colors.grey.withOpacity(0.0),
       statusBarBrightness: Brightness.light,
     ),
   );
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  final themeServise = await ThemeService.instance;
+  var initTheme = themeServise.initial;
+  runApp(MyApp(theme: initTheme));
 }
 
 class MyApp extends StatelessWidget {
+  MyApp({this.theme});
+  final ThemeData theme;
+
   @override
   Widget build(BuildContext context) {
-    final isPlatformDark =
-        WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
-    final initTheme = isPlatformDark ? lightTheme : darkTheme;
     return ThemeProvider(
-      initTheme: initTheme,
+      initTheme: theme,
       child: Builder(
         builder: (context) {
           return MultiProvider(
             providers: [
-              // will be need later
+              // this provider will be need later
               ChangeNotifierProvider(
                 create: (ctx) => MovieItemProvier(),
               ),
@@ -41,10 +44,8 @@ class MyApp extends StatelessWidget {
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Flutter Demo',
-              // will used animated theme switcher later
-              // theme: ThemeProvider.of(context),
-              theme: ThemeData.dark(),
-              home: TestScreen(),
+              theme: ThemeProvider.of(context),
+              home: HomeScreen(),
             ),
           );
         },

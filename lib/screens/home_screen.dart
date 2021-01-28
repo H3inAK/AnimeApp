@@ -1,15 +1,11 @@
-import 'dart:convert';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
-import '../themes/theme_config.dart';
-import '../models/movie_item.dart';
-import '../providers/movie_item_provider.dart';
+import '../themes/theme_service.dart';
+import '../tests/test_api.dart';
+import '../tests/test_page.dart';
+import '../tests/trending_series.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -19,54 +15,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<MovieItem> _futureMovie;
-  int initMovie = 1;
-
-  Future<MovieItem> _fetchMovie() async {
-    try {
-      final response = await http.get("https://kitsu.io/api/edge/anime/25");
-
-      if (response.statusCode == 200) {
-        print(jsonDecode(response.body));
-        final responseData = jsonDecode(response.body);
-        return MovieItem.fromJson(responseData['data']);
-      } else {
-        throw Exception("Failed to fetch data!");
-      }
-    } catch (e) {
-      throw (e);
-    }
-    // Dio doesn't return String insted json
-    // cause just because of accept type form kisu api
-    // try {
-    //   Dio dio = Dio();
-    //   final response = await dio.get(
-    //     'https://kitsu.io/api/edge/anime/25',
-    //     options: Options(
-    //       contentType: "application/json; charset=utf-8",
-    //       responseType: ResponseType.json,
-    //     ),
-    //   );
-    //   print(response.statusCode);
-
-    //   if (response.statusCode == 200) {
-    //     print(response.data);
-    //     print(response.data is Map);
-    //     return MovieItem.fromJson(response.data['data'] as Map<String, dynamic>);
-    //   } else {
-    //     print("something went wrong!");
-    //   }
-    // } catch (error, stacktrace) {
-    //   print("exception occured: $error stackTrace: $stacktrace");
-    // }
-  }
-
-  @override
-  void initState() {
-    _futureMovie = _fetchMovie();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return ThemeSwitchingArea(
@@ -80,20 +28,30 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ThemeSwitcher(
                     builder: (context) {
                       return IconButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          var themeName =
+                              ThemeProvider.of(context).brightness ==
+                                      Brightness.light
+                                  ? 'dark'
+                                  : 'light';
+                          print(themeName);
+                          var service = await ThemeService.instance
+                            ..save(themeName);
+                          var theme = service.getByName(themeName);
+                          // ThemeSwitcher.of(context).changeTheme(theme: theme);
                           ThemeSwitcher.of(context).changeTheme(
-                            theme: ThemeProvider.of(context).brightness ==
-                                    Brightness.light
-                                ? darkTheme
-                                : lightTheme,
+                            theme: theme,
                             reverseAnimation:
                                 ThemeProvider.of(context).brightness ==
-                                        Brightness.light
+                                        Brightness.dark
                                     ? true
                                     : false,
                           );
                         },
-                        icon: Icon(Icons.brightness_3, size: 25),
+                        icon: ThemeProvider.of(context).brightness ==
+                                Brightness.dark
+                            ? Icon(Icons.wb_sunny, size: 25)
+                            : Icon(Icons.brightness_3, size: 25),
                       );
                     },
                   ),
@@ -104,157 +62,144 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         appBar: AppBar(
           title: Text(
-            'Home',
+            'FoxAnime',
           ),
+          centerTitle: true,
         ),
-        body: Column(
+        body: ListView(
+          padding: EdgeInsets.symmetric(
+            vertical: 20,
+            horizontal: 30,
+          ),
           children: [
-            Expanded(
-              child: FutureBuilder<void>(
-                future: Provider.of<MovieItemProvier>(context, listen: false)
-                    .fetchAndSetMovieItem(initMovie),
-                builder: (ctx, dataSnapshot) {
-                  if (dataSnapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: Text("loading"),
-                    );
-                  } else if (dataSnapshot.error == null) {
-                    return Consumer<MovieItemProvier>(
-                      builder: (ctx, movieData, _) => ListView(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 6,
-                        ),
-                        children: [
-                          Text(
-                            movieData.movieItem.title,
-                            style: Theme.of(context).textTheme.headline4,
-                          ),
-                          Row(
-                            children: [
-                              Text("Realsed on " +
-                                  DateFormat().format(DateTime.parse(
-                                      movieData.movieItem.endDate))),
-                              Spacer(),
-                              Chip(
-                                backgroundColor: Colors.amber.withOpacity(0.94),
-                                label: Text(movieData.movieItem.status),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(2),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            width: double.infinity,
-                            height: 200,
-                            child: Image.network(
-                              movieData.movieItem.coverImage,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              RatingBar.builder(
-                                initialRating: (double.parse(
-                                            movieData.movieItem.averageRating) /
-                                        10) /
-                                    2,
-                                minRating: 1,
-                                direction: Axis.horizontal,
-                                allowHalfRating: true,
-                                itemCount: 5,
-                                itemPadding:
-                                    EdgeInsets.symmetric(horizontal: 1),
-                                itemBuilder: (ctx, i) {
-                                  return Container(
-                                    height: 20,
-                                    width: 16,
-                                    child: Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
-                                      size: 16,
-                                    ),
-                                  );
-                                },
-                                onRatingUpdate: null,
-                              ),
-                              Chip(
-                                backgroundColor: Colors.amber.withOpacity(0.9),
-                                label: Row(
-                                  children: [
-                                    Icon(Icons.favorite),
-                                    Text(movieData.movieItem.favouriateCount
-                                        .toString()),
-                                  ],
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(4),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(movieData.movieItem.description),
-                          Text("age rating : " +
-                              movieData.movieItem.ageRatingGuide),
-                          Text("episodes : " +
-                              movieData.movieItem.episodeCount.toString() +
-                              " to " +
-                              movieData.movieItem.episodeLenght.toString()),
-                          Text("favouriates : " +
-                              movieData.movieItem.favouriateCount.toString()),
-                        ],
-                      ),
-                    );
-                  } else {
-                    return Center(
-                      child: Text("loading"),
-                    );
-                  }
-                },
+            RaisedButton(
+              elevation: 6,
+              onPressed: () {
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (ctx) => TestScreen("Anime"),
+                  ),
+                );
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
+              child: Text(
+                "Anime Series",
+                style: TextStyle(
+                  color: Colors.black54,
+                  // fontSize: 18,
+                ),
+              ),
+              color: Theme.of(context).accentColor,
             ),
-            Container(
-              height: 60,
-              child: Row(
-                children: [
-                  OutlineButton(
-                    onPressed: () {
-                      Provider.of<MovieItemProvier>(context, listen: false)
-                          .fetchAndSetMovieItem(
-                              initMovie == 1 ? 1 : (initMovie -= 1));
-                    },
-                    child: Icon(Icons.arrow_left),
+            RaisedButton(
+              elevation: 6,
+              onPressed: () {
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (ctx) => TestScreen("Manga"),
                   ),
-                  Spacer(),
-                  OutlineButton(
-                    onPressed: () {
-                      Provider.of<MovieItemProvier>(context, listen: false)
-                          .fetchAndSetMovieItem(initMovie += 1);
-                    },
-                    child: Icon(Icons.arrow_right),
-                  ),
-                ],
+                );
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
+              child: Text(
+                "Manga Series",
+                style: TextStyle(
+                  color: Colors.black54,
+                  // fontSize: 18,
+                ),
+              ),
+              color: Theme.of(context).accentColor,
+            ),
+            RaisedButton(
+              elevation: 6,
+              onPressed: () {
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (ctx) => TestPage("Anime"),
+                  ),
+                );
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                "Popular Anime Series",
+                style: TextStyle(
+                  color: Colors.black54,
+                  // fontSize: 18,
+                ),
+              ),
+              color: Theme.of(context).accentColor,
+            ),
+            RaisedButton(
+              elevation: 6,
+              onPressed: () {
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (ctx) => TestPage("Manga"),
+                  ),
+                );
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                "Popular Manga Series",
+                style: TextStyle(
+                  color: Colors.black54,
+                  // fontSize: 18,
+                ),
+              ),
+              color: Theme.of(context).accentColor,
+            ),
+            RaisedButton(
+              elevation: 6,
+              onPressed: () {
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (ctx) => TrendingSeries("Anime"),
+                  ),
+                );
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                "Trending Anime Series",
+                style: TextStyle(
+                  color: Colors.black54,
+                  // fontSize: 18,
+                ),
+              ),
+              color: Theme.of(context).accentColor,
+            ),
+            RaisedButton(
+              elevation: 6,
+              onPressed: () {
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (ctx) => TrendingSeries("Manga"),
+                  ),
+                );
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                "Trending Manga Series",
+                style: TextStyle(
+                  color: Colors.black54,
+                  // fontSize: 18,
+                ),
+              ),
+              color: Theme.of(context).accentColor,
             ),
           ],
         ),
-        // body: Center(
-        //   child: OutlineButton(
-        //     onPressed: () async {
-        //       final response =
-        //           await Dio().get("https://kitsu.io/api/edge/anime/1");
-        //       print(response.data);
-        //     },
-        //     onPressed: _fetchMovies,
-        //     child: Text("fetch data"),
-        //   ),
-        // ),
       ),
     );
   }

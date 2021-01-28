@@ -4,6 +4,10 @@ import 'package:movieapp/widgets/movie_item.dart';
 import 'package:provider/provider.dart';
 
 class TestScreen extends StatefulWidget {
+  final String movieType;
+
+  TestScreen(this.movieType);
+
   @override
   _TestScreenState createState() => _TestScreenState();
 }
@@ -16,67 +20,87 @@ class _TestScreenState extends State<TestScreen> {
     print("build()");
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            setState(() {
-              initOffset -= 10;
-            });
-          },
-        ),
-        title: Text("Anime Series"),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.arrow_forward_ios),
-            onPressed: () {
-              setState(() {
-                initOffset += 10;
-              });
-            },
-          ),
-        ],
+        title: Text("${widget.movieType} Series"),
       ),
-      // body: Center(
-      //   child: OutlineButton(
-      //     onPressed: () {
-      //       Provider.of<MovieItemsProvider>(context, listen: false)
-      //           .fetchAndSetMovieItems("anime");
-      //     },
-      //     child: Text("test api"),
-      //   ),
-      // ),
-      body: FutureBuilder(
-        future: Provider.of<MovieItemsProvider>(context, listen: false)
-            .fetchAndSetMovieItems("anime", initOffset),
-        builder: (ctx, dataSnapShot) {
-          if (dataSnapShot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (dataSnapShot.error == null) {
-            print("ui rendered");
-            return Consumer<MovieItemsProvider>(
-              builder: (ctx, movieItemsData, _) {
-                return GridView.builder(
-                  padding: EdgeInsets.all(12),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 3.5 / 3.2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 8,
-                  ),
-                  itemCount: movieItemsData.movieItems.length,
-                  itemBuilder: (ctx, i) {
-                    return MovieItemWidget(movieItemsData.movieItems[i].id);
+      body: Stack(
+        children: [
+          FutureBuilder(
+            future: Provider.of<MovieItemsProvider>(context, listen: false)
+                .fetchAndSetMovieItems(
+                    widget.movieType.toLowerCase(), initOffset),
+            builder: (ctx, dataSnapShot) {
+              if (dataSnapShot.connectionState == ConnectionState.waiting) {
+                // print(MediaQuery.of(context).size.width);
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (dataSnapShot.error == null) {
+                print("ui rendered");
+                return Consumer<MovieItemsProvider>(
+                  builder: (ctx, movieItemsData, _) {
+                    return GridView.builder(
+                      padding: EdgeInsets.only(
+                        top: 12,
+                        left: 12,
+                        right: 12,
+                        bottom: 80,
+                      ),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 3.5 / 3.2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 8,
+                      ),
+                      itemCount: movieItemsData.movieItems.length,
+                      itemBuilder: (ctx, i) {
+                        return MovieItemWidget(movieItemsData.movieItems[i].id);
+                      },
+                    );
                   },
                 );
-              },
-            );
-          } else {
-            return Center(child: Text(dataSnapShot.error.toString()));
-          }
-        },
+              } else {
+                return Center(child: Text(dataSnapShot.error.toString()));
+              }
+            },
+          ),
+          Positioned(
+            height: 50,
+            bottom: 10,
+            left: 100,
+            right: 100,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    onPressed: () {
+                      setState(() {
+                        if (initOffset != 0) {
+                          initOffset -= 10;
+                        } else {
+                          return;
+                        }
+                      });
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.arrow_forward_ios),
+                    onPressed: () {
+                      setState(() {
+                        initOffset += 10;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
