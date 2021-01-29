@@ -157,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
           itemCount: cardList.length,
           itemBuilder: (ctx, i) {
             return Card(
-              elevation: 8,
+              elevation: 6,
               child: ListTile(
                 onTap: () {
                   Navigator.of(context).push(

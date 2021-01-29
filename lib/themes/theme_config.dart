@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 ThemeData lightTheme = ThemeData.light().copyWith(
-  primaryColor: Colors.grey,
+  primaryColor: Colors.purple,
   scaffoldBackgroundColor: Colors.white,
 );
 
