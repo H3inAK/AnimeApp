@@ -92,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Brightness.light
                                   ? 'dark'
                                   : 'light';
-                          print(themeName);
                           var service = await ThemeService.instance
                             ..save(themeName);
                           var theme = service.getByName(themeName);
@@ -100,10 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ThemeSwitcher.of(context).changeTheme(
                             theme: theme,
                             reverseAnimation:
-                                ThemeProvider.of(context).brightness ==
-                                        Brightness.dark
-                                    ? true
-                                    : false,
+                                themeName == 'light' ? true : false,
                           );
                         },
                         icon: ThemeProvider.of(context).brightness ==
@@ -119,10 +115,39 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         appBar: AppBar(
-          title: Text(
-            'FoxAnime',
+          title: Container(
+            height: 80,
+            width: 120,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/foxanime.png"),
+              ),
+            ),
           ),
           centerTitle: true,
+          actions: [
+            IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (ctx) => SearchScreen(),
+                    ),
+                  );
+                }),
+            PopupMenuButton(
+              itemBuilder: (ctx) {
+                return [
+                  PopupMenuItem(
+                    child: Text("take action one"),
+                  ),
+                  PopupMenuItem(
+                    child: Text("take action two"),
+                  ),
+                ];
+              },
+            ),
+          ],
         ),
         body: ListView.builder(
           padding: EdgeInsets.symmetric(
