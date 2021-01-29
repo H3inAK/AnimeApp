@@ -1,15 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:movieapp/providers/movie_items_provider.dart';
-import 'package:movieapp/tests/search.dart';
-import 'package:provider/provider.dart';
 
 import '../themes/theme_service.dart';
-import '../tests/test_api.dart';
-import '../tests/test_page.dart';
-import '../tests/trending_series.dart';
+import './search_screen.dart';
+import './all_movie_series.dart';
+import './popular_movie_series.dart';
+import './trending_series.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -42,9 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           var service = await ThemeService.instance
                             ..save(themeName);
                           var theme = service.getByName(themeName);
-                          setState(() {
-                            timeDilation = 3.0;
-                          });
+
                           ThemeSwitcher.of(context).changeTheme(
                             theme: theme,
                             reverseAnimation:
@@ -53,9 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ? true
                                     : false,
                           );
-                          setState(() {
-                            timeDilation = 1.0;
-                          });
                         },
                         icon: ThemeProvider.of(context).brightness ==
                                 Brightness.dark
@@ -87,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.of(context).push(
                     CupertinoPageRoute(
-                      builder: (ctx) => TestScreen("Anime"),
+                      builder: (ctx) => AllMovieSeriesScreen("Anime"),
                     ),
                   );
                 },
@@ -96,10 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 title: Text(
                   "Anime Series",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    // fontSize: 18,
-                  ),
                 ),
                 trailing: Icon(Icons.arrow_forward_ios),
               ),
@@ -110,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.of(context).push(
                     CupertinoPageRoute(
-                      builder: (ctx) => TestScreen("Manga"),
+                      builder: (ctx) => AllMovieSeriesScreen("Manga"),
                     ),
                   );
                 },
@@ -119,10 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 title: Text(
                   "Manga Series",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    // fontSize: 18,
-                  ),
                 ),
                 trailing: Icon(Icons.arrow_forward_ios),
               ),
@@ -133,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.of(context).push(
                     CupertinoPageRoute(
-                      builder: (ctx) => TestPage("Anime"),
+                      builder: (ctx) => PopularMovieSeries("Anime"),
                     ),
                   );
                 },
@@ -153,16 +137,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.of(context).push(
                     CupertinoPageRoute(
-                      builder: (ctx) => TestPage("Manga"),
+                      builder: (ctx) => PopularMovieSeries("Manga"),
                     ),
                   );
                 },
                 title: Text(
                   "Popular Manga Series",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    // fontSize: 18,
-                  ),
                 ),
                 trailing: Icon(Icons.arrow_forward_ios),
               ),
@@ -179,10 +159,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 title: Text(
                   "Trending Anime Series",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    // fontSize: 18,
-                  ),
                 ),
                 trailing: Icon(Icons.arrow_forward_ios),
               ),
@@ -199,10 +175,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 title: Text(
                   "Trending Manga Series",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    // fontSize: 18,
-                  ),
                 ),
                 trailing: Icon(Icons.arrow_forward_ios),
               ),
@@ -219,21 +191,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 title: Text(
                   "Search Implementation",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    // fontSize: 18,
-                  ),
                 ),
                 trailing: Icon(Icons.arrow_forward_ios),
               ),
             ),
-            // OutlineButton(
-            //   onPressed: () {
-            //     Provider.of<MovieItemsProvider>(context, listen: false)
-            //         .searchAndSetSeries("attack on");
-            //   },
-            //   child: Text("test api"),
-            // ),
           ],
         ),
       ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:movieapp/providers/movie_items_provider.dart';
-import 'package:movieapp/widgets/movie_item.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/movie_items_provider.dart';
+import '../widgets/movie_item.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -25,11 +26,16 @@ class _SearchScreenState extends State<SearchScreen> {
         backgroundColor: Colors.transparent,
         actions: [
           Container(
+            margin: const EdgeInsets.symmetric(vertical: 5),
             width: 340,
             child: TextField(
+              autofocus: true,
+              textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
                 hintText: "search any series you want ...",
                 border: InputBorder.none,
+                // contentPadding: EdgeInsets.only(top: 2),
+                prefixIcon: const Icon(Icons.search),
               ),
               controller: textEditingController,
               onSubmitted: (value) {
@@ -39,6 +45,33 @@ class _SearchScreenState extends State<SearchScreen> {
               },
             ),
           ),
+          // Container(
+          //   margin: const EdgeInsets.symmetric(vertical: 5),
+          //   width: MediaQuery.of(context).size.width * 0.75,
+          //   child: TextField(
+          //     onChanged: (value) => _filterSearchResult(value),
+          //     controller: textEditingController,
+          //     autofocus: true,
+          //     textAlign: TextAlign.left,
+          //     style: const TextStyle(color: Colors.black),
+          //     textAlignVertical: TextAlignVertical.center,
+          //     decoration: InputDecoration(
+          //       contentPadding: EdgeInsets.only(top: 4),
+          //       prefixIcon: const Icon(
+          //         Icons.search,
+          //         color: Colors.black26,
+          //       ),
+          //       hintText: "search country by name .....",
+          //       hintStyle: const TextStyle(color: Colors.black38),
+          //       fillColor: Colors.grey[100],
+          //       filled: true,
+          //       border: OutlineInputBorder(
+          //         borderRadius: BorderRadius.circular(10),
+          //         borderSide: BorderSide.none,
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
       body: _startSearching

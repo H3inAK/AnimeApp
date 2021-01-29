@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:movieapp/providers/movie_items_provider.dart';
-import 'package:movieapp/widgets/movie_item.dart';
 import 'package:provider/provider.dart';
 
-class TestPage extends StatefulWidget {
+import '../providers/movie_items_provider.dart';
+import '../widgets/movie_item.dart';
+
+class PopularMovieSeries extends StatefulWidget {
   final String seriesType;
 
-  TestPage(this.seriesType);
+  PopularMovieSeries(this.seriesType);
 
   @override
-  _TestPageState createState() => _TestPageState();
+  _PopularMovieSeriesState createState() => _PopularMovieSeriesState();
 }
 
-class _TestPageState extends State<TestPage> {
+class _PopularMovieSeriesState extends State<PopularMovieSeries> {
   var initOffset = 0;
 
   @override
@@ -29,7 +30,6 @@ class _TestPageState extends State<TestPage> {
                     widget.seriesType.toLowerCase(), initOffset),
             builder: (ctx, dataSnapShot) {
               if (dataSnapShot.connectionState == ConnectionState.waiting) {
-                // print(MediaQuery.of(context).size.width);
                 return Center(
                   child: CircularProgressIndicator(),
                 );

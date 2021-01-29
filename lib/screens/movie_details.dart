@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
-import 'package:movieapp/providers/movie_items_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../providers/movie_items_provider.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
   final String movieId;

@@ -19,9 +19,7 @@ class ThemeService {
   final allThemes = <String, ThemeData>{
     'dark': darkTheme,
     'light': lightTheme,
-    'pink': pinkTheme,
     'darkBlue': darkBlueTheme,
-    'halloween': halloweenTheme,
   };
 
   get initial {

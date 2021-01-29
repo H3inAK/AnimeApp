@@ -3,16 +3,16 @@ import 'package:movieapp/providers/movie_items_provider.dart';
 import 'package:movieapp/widgets/movie_item.dart';
 import 'package:provider/provider.dart';
 
-class TestScreen extends StatefulWidget {
+class AllMovieSeriesScreen extends StatefulWidget {
   final String movieType;
 
-  TestScreen(this.movieType);
+  AllMovieSeriesScreen(this.movieType);
 
   @override
-  _TestScreenState createState() => _TestScreenState();
+  _AllMovieSeriesScreenState createState() => _AllMovieSeriesScreenState();
 }
 
-class _TestScreenState extends State<TestScreen> {
+class _AllMovieSeriesScreenState extends State<AllMovieSeriesScreen> {
   var initOffset = 0;
 
   @override
@@ -30,7 +30,6 @@ class _TestScreenState extends State<TestScreen> {
                     widget.movieType.toLowerCase(), initOffset),
             builder: (ctx, dataSnapShot) {
               if (dataSnapShot.connectionState == ConnectionState.waiting) {
-                // print(MediaQuery.of(context).size.width);
                 return Center(
                   child: CircularProgressIndicator(),
                 );
