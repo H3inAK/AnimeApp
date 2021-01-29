@@ -114,7 +114,7 @@ class MovieDetailsScreen extends StatelessWidget {
           Text(displayedMovieDetail.description),
           SizedBox(height: 20),
           Text(
-            "Age rating Guide     : " +
+            "Age rating Guide : " +
                 displayedMovieDetail.ageRatingGuide.toString(),
             style: Theme.of(context).textTheme.caption.copyWith(
                   color: Colors.amber,

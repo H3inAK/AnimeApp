@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 
 import '../themes/theme_service.dart';
+import '../models/data.dart';
 import './search_screen.dart';
 import './all_movie_series.dart';
 import './popular_movie_series.dart';
 import './trending_series.dart';
+import './categories_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -16,6 +18,61 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Data> cardList = <Data>[
+    Data(
+      title: "All anime Series",
+      widget: AllMovieSeriesScreen("Anime"),
+    ),
+    Data(
+      title: "All manga Series",
+      widget: AllMovieSeriesScreen("Manga"),
+    ),
+    Data(
+      title: "Popular Anime Series",
+      widget: PopularMovieSeries("Anime"),
+    ),
+    Data(
+      title: "Popular Manga Series",
+      widget: PopularMovieSeries("Manga"),
+    ),
+    Data(
+      title: "Trending Anime Series",
+      widget: TrendingSeries("Anime"),
+    ),
+    Data(
+      title: "Trending Manga Series",
+      widget: TrendingSeries("Manga"),
+    ),
+    Data(
+      title: "Adventure Anime Series",
+      widget: CategoySeries("Anime", "Adventure"),
+    ),
+    Data(
+      title: "Romance Anime Series",
+      widget: CategoySeries("Anime", "Romance"),
+    ),
+    Data(
+      title: "Action Anime Series",
+      widget: CategoySeries("Anime", "Action"),
+    ),
+    Data(
+      title: "Adventure Manga Series",
+      widget: CategoySeries("Manga", "Adventure"),
+    ),
+    Data(
+      title: "Romance Manga Series",
+      widget: CategoySeries("Manga", "Romance"),
+    ),
+    Data(
+      title: "Action Manga Series",
+      widget: CategoySeries("Manga", "Action"),
+    ),
+    Data(
+      title: "Search Anime Series",
+      widget: SearchScreen(),
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return ThemeSwitchingArea(
@@ -67,19 +124,20 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           centerTitle: true,
         ),
-        body: ListView(
+        body: ListView.builder(
           padding: EdgeInsets.symmetric(
             vertical: 20,
             horizontal: 10,
           ),
-          children: [
-            Card(
+          itemCount: cardList.length,
+          itemBuilder: (ctx, i) {
+            return Card(
               elevation: 8,
               child: ListTile(
                 onTap: () {
                   Navigator.of(context).push(
                     CupertinoPageRoute(
-                      builder: (ctx) => AllMovieSeriesScreen("Anime"),
+                      builder: (ctx) => cardList[i].widget,
                     ),
                   );
                 },
@@ -87,115 +145,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 title: Text(
-                  "Anime Series",
+                  cardList[i].title,
                 ),
                 trailing: Icon(Icons.arrow_forward_ios),
               ),
-            ),
-            Card(
-              elevation: 8,
-              child: ListTile(
-                onTap: () {
-                  Navigator.of(context).push(
-                    CupertinoPageRoute(
-                      builder: (ctx) => AllMovieSeriesScreen("Manga"),
-                    ),
-                  );
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                title: Text(
-                  "Manga Series",
-                ),
-                trailing: Icon(Icons.arrow_forward_ios),
-              ),
-            ),
-            Card(
-              elevation: 8,
-              child: ListTile(
-                onTap: () {
-                  Navigator.of(context).push(
-                    CupertinoPageRoute(
-                      builder: (ctx) => PopularMovieSeries("Anime"),
-                    ),
-                  );
-                },
-                title: Text(
-                  "Popular Anime Series",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    // fontSize: 18,
-                  ),
-                ),
-                trailing: Icon(Icons.arrow_forward_ios),
-              ),
-            ),
-            Card(
-              elevation: 8,
-              child: ListTile(
-                onTap: () {
-                  Navigator.of(context).push(
-                    CupertinoPageRoute(
-                      builder: (ctx) => PopularMovieSeries("Manga"),
-                    ),
-                  );
-                },
-                title: Text(
-                  "Popular Manga Series",
-                ),
-                trailing: Icon(Icons.arrow_forward_ios),
-              ),
-            ),
-            Card(
-              elevation: 8,
-              child: ListTile(
-                onTap: () {
-                  Navigator.of(context).push(
-                    CupertinoPageRoute(
-                      builder: (ctx) => TrendingSeries("Anime"),
-                    ),
-                  );
-                },
-                title: Text(
-                  "Trending Anime Series",
-                ),
-                trailing: Icon(Icons.arrow_forward_ios),
-              ),
-            ),
-            Card(
-              elevation: 8,
-              child: ListTile(
-                onTap: () {
-                  Navigator.of(context).push(
-                    CupertinoPageRoute(
-                      builder: (ctx) => TrendingSeries("Manga"),
-                    ),
-                  );
-                },
-                title: Text(
-                  "Trending Manga Series",
-                ),
-                trailing: Icon(Icons.arrow_forward_ios),
-              ),
-            ),
-            Card(
-              elevation: 8,
-              child: ListTile(
-                onTap: () {
-                  Navigator.of(context).push(
-                    CupertinoPageRoute(
-                      builder: (ctx) => SearchScreen(),
-                    ),
-                  );
-                },
-                title: Text(
-                  "Search Implementation",
-                ),
-                trailing: Icon(Icons.arrow_forward_ios),
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

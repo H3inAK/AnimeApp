@@ -30,48 +30,18 @@ class _SearchScreenState extends State<SearchScreen> {
             width: 340,
             child: TextField(
               autofocus: true,
-              textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
                 hintText: "search any series you want ...",
                 border: InputBorder.none,
-                // contentPadding: EdgeInsets.only(top: 2),
-                prefixIcon: const Icon(Icons.search),
               ),
               controller: textEditingController,
-              onSubmitted: (value) {
+              onSubmitted: (_) {
                 setState(() {
                   _startSearching = true;
                 });
               },
             ),
           ),
-          // Container(
-          //   margin: const EdgeInsets.symmetric(vertical: 5),
-          //   width: MediaQuery.of(context).size.width * 0.75,
-          //   child: TextField(
-          //     onChanged: (value) => _filterSearchResult(value),
-          //     controller: textEditingController,
-          //     autofocus: true,
-          //     textAlign: TextAlign.left,
-          //     style: const TextStyle(color: Colors.black),
-          //     textAlignVertical: TextAlignVertical.center,
-          //     decoration: InputDecoration(
-          //       contentPadding: EdgeInsets.only(top: 4),
-          //       prefixIcon: const Icon(
-          //         Icons.search,
-          //         color: Colors.black26,
-          //       ),
-          //       hintText: "search country by name .....",
-          //       hintStyle: const TextStyle(color: Colors.black38),
-          //       fillColor: Colors.grey[100],
-          //       filled: true,
-          //       border: OutlineInputBorder(
-          //         borderRadius: BorderRadius.circular(10),
-          //         borderSide: BorderSide.none,
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
       body: _startSearching

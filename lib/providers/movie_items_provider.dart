@@ -12,10 +12,10 @@ class MovieItemsProvider with ChangeNotifier {
     return [..._movieItems];
   }
 
-  Future<void> fetchAndSetMovieItems(String category, int offset,
+  Future<void> fetchAndSetMovieItems(String seriesType, int offset,
       [int limit = 10]) async {
     final url =
-        "https://kitsu.io/api/edge/$category?page[limit]=$limit&page[offset]=$offset";
+        "https://kitsu.io/api/edge/$seriesType?page[limit]=$limit&page[offset]=$offset";
     final response = await http.get(url);
     final responseData = jsonDecode(response.body)["data"] as List<dynamic>;
     // print(responseData);
@@ -30,10 +30,10 @@ class MovieItemsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchAndSetPopularMovieItems(String category, int offset,
+  Future<void> fetchAndSetPopularMovieItems(String seriesType, int offset,
       [int limit = 10]) async {
     final url =
-        "https://kitsu.io/api/edge/$category?page[limit]=$limit&page[offset]=$offset&sort=popularityRank";
+        "https://kitsu.io/api/edge/$seriesType?page[limit]=$limit&page[offset]=$offset&sort=popularityRank";
     final response = await http.get(url);
     final responseData = jsonDecode(response.body)["data"] as List<dynamic>;
     // print(responseData);
@@ -48,10 +48,29 @@ class MovieItemsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchAndSetTrendingSeries(String category, int offset,
+  Future<void> fetchAndSetTrendingSeries(String seriesType, int offset,
       [int limit = 10]) async {
     final url =
-        "https://kitsu.io/api/edge/trending/$category?page[limit]=$limit&page[offset]=$offset";
+        "https://kitsu.io/api/edge/trending/$seriesType?page[limit]=$limit&page[offset]=$offset";
+    final response = await http.get(url);
+    final responseData = jsonDecode(response.body)["data"] as List<dynamic>;
+    // print(responseData);
+
+    _movieItems.clear();
+    responseData.forEach((movieItem) {
+      _movieItems.add(MovieItem.fromJson(movieItem));
+    });
+    _movieItems.forEach((movieItem) {
+      print(movieItem.title);
+    });
+    notifyListeners();
+  }
+
+  Future<void> fetchAndSetByCategories(
+      String seriesType, String category, int offset,
+      [int limit = 10]) async {
+    final url =
+        "https://kitsu.io/api/edge/$seriesType?filter[categories]=$category&page[limit]=$limit&page[offset]=$offset&sort=popularityRank";
     final response = await http.get(url);
     final responseData = jsonDecode(response.body)["data"] as List<dynamic>;
     // print(responseData);
