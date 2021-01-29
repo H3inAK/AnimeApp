@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: ListView.builder(
           padding: EdgeInsets.symmetric(
-            vertical: 20,
+            vertical: 6,
             horizontal: 10,
           ),
           itemCount: cardList.length,

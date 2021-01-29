@@ -32,7 +32,8 @@ class MovieItemWidget extends StatelessWidget {
                   tag: displayedMovieItem.id,
                   child: FadeInImage(
                     placeholder: AssetImage('assets/images/loading.jpeg'),
-                    image: NetworkImage(displayedMovieItem.posterImage),
+                    image:
+                        NetworkImage(displayedMovieItem.attributes.posterImage),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -44,7 +45,7 @@ class MovieItemWidget extends StatelessWidget {
           backgroundColor:
               Theme.of(context).bottomAppBarColor.withOpacity(0.87),
           title: Text(
-            displayedMovieItem.title,
+            displayedMovieItem.attributes.canonicalTitle,
             style: Theme.of(context).textTheme.headline6.copyWith(
                   fontSize: 14,
                 ),

@@ -28,23 +28,24 @@ class MovieDetailsScreen extends StatelessWidget {
         ),
         children: [
           Text(
-            displayedMovieDetail.title,
+            displayedMovieDetail.attributes.canonicalTitle,
             style: Theme.of(context).textTheme.headline4,
           ),
           Row(
             children: [
-              displayedMovieDetail.endDate != null
+              displayedMovieDetail.attributes.endDate != null
                   ? Text(
                       "Realsed on " +
                           DateFormat("dd/MM/yy").format(
-                            DateTime.parse(displayedMovieDetail.endDate),
+                            DateTime.parse(
+                                displayedMovieDetail.attributes.endDate),
                           ),
                     )
                   : Text("No Release"),
               Spacer(),
               Chip(
                 backgroundColor: Colors.amber.withOpacity(0.94),
-                label: Text(displayedMovieDetail.status),
+                label: Text(displayedMovieDetail.attributes.status),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(2),
@@ -56,11 +57,11 @@ class MovieDetailsScreen extends StatelessWidget {
           Container(
             width: double.infinity,
             height: 200,
-            child: displayedMovieDetail.coverImage.isNotEmpty
+            child: displayedMovieDetail.attributes.coverImage.isNotEmpty
                 ? Hero(
                     tag: displayedMovieDetail.id,
                     child: Image.network(
-                      displayedMovieDetail.coverImage,
+                      displayedMovieDetail.attributes.coverImage,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Center(
                         child: Text("cover image couldn't be loaded!"),
@@ -73,8 +74,11 @@ class MovieDetailsScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               RatingBar.builder(
-                initialRating: displayedMovieDetail.averageRating != null
-                    ? (double.parse(displayedMovieDetail.averageRating) / 10) /
+                initialRating: displayedMovieDetail.attributes.averageRating !=
+                        null
+                    ? (double.parse(
+                                displayedMovieDetail.attributes.averageRating) /
+                            10) /
                         2
                     : 0,
                 minRating: 1,
@@ -100,7 +104,8 @@ class MovieDetailsScreen extends StatelessWidget {
                 label: Row(
                   children: [
                     Icon(Icons.favorite),
-                    Text(displayedMovieDetail.favouriateCount.toString()),
+                    Text(displayedMovieDetail.attributes.favoritesCount
+                        .toString()),
                   ],
                 ),
                 shape: RoundedRectangleBorder(
@@ -111,18 +116,19 @@ class MovieDetailsScreen extends StatelessWidget {
               ),
             ],
           ),
-          Text(displayedMovieDetail.description),
+          Text(displayedMovieDetail.attributes.description),
           SizedBox(height: 20),
           Text(
             "Age rating Guide : " +
-                displayedMovieDetail.ageRatingGuide.toString(),
+                displayedMovieDetail.attributes.ageRatingGuide,
             style: Theme.of(context).textTheme.caption.copyWith(
                   color: Colors.amber,
                   fontSize: 16,
                 ),
           ),
           Text(
-            "Total episodes : " + displayedMovieDetail.episodeLenght.toString(),
+            "Total episodes : " +
+                displayedMovieDetail.attributes.episodeLength.toString(),
             style: Theme.of(context).textTheme.caption.copyWith(
                   color: Colors.amber,
                   fontSize: 16,
@@ -132,7 +138,7 @@ class MovieDetailsScreen extends StatelessWidget {
           RaisedButton.icon(
             onPressed: () async {
               final url =
-                  "https://www.youtube.com/watch?v=${displayedMovieDetail.youtubeId}";
+                  "https://www.youtube.com/watch?v=${displayedMovieDetail.attributes.youtubeVideoId}";
               if (await canLaunch(url)) {
                 await launch(url);
               } else {

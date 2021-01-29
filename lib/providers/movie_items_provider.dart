@@ -25,7 +25,7 @@ class MovieItemsProvider with ChangeNotifier {
       _movieItems.add(MovieItem.fromJson(movieItem));
     });
     _movieItems.forEach((movieItem) {
-      print(movieItem.title);
+      print(movieItem.attributes.canonicalTitle);
     });
     notifyListeners();
   }
@@ -43,7 +43,7 @@ class MovieItemsProvider with ChangeNotifier {
       _movieItems.add(MovieItem.fromJson(movieItem));
     });
     _movieItems.forEach((movieItem) {
-      print(movieItem.title);
+      print(movieItem.attributes.canonicalTitle);
     });
     notifyListeners();
   }
@@ -61,7 +61,7 @@ class MovieItemsProvider with ChangeNotifier {
       _movieItems.add(MovieItem.fromJson(movieItem));
     });
     _movieItems.forEach((movieItem) {
-      print(movieItem.title);
+      print(movieItem.attributes.canonicalTitle);
     });
     notifyListeners();
   }
@@ -80,7 +80,7 @@ class MovieItemsProvider with ChangeNotifier {
       _movieItems.add(MovieItem.fromJson(movieItem));
     });
     _movieItems.forEach((movieItem) {
-      print(movieItem.title);
+      print(movieItem.attributes.canonicalTitle);
     });
     notifyListeners();
   }
@@ -96,7 +96,7 @@ class MovieItemsProvider with ChangeNotifier {
       _movieItems.add(MovieItem.fromJson(movieItem));
     });
     _movieItems.forEach((movieItem) {
-      print(movieItem.title);
+      print(movieItem.attributes.canonicalTitle);
     });
     notifyListeners();
   }

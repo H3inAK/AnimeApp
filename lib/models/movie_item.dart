@@ -1,59 +1,64 @@
-class MovieItem {
-  final String id;
-  final String type;
-  final String title;
-  final dynamic description;
+class Attributes {
+  final String canonicalTitle;
+  final String description;
   final String averageRating;
   final String ageRatingGuide;
   final String posterImage;
   final String coverImage;
-  final int episodeCount;
-  final int episodeLenght;
+  final int episodeLength;
   final String status;
   final int userCount;
-  final int favouriateCount;
+  final int favoritesCount;
   final String startDate;
   final String endDate;
-  final String youtubeId;
+  final String youtubeVideoId;
 
-  MovieItem({
-    this.id,
-    this.type,
-    this.title,
+  Attributes({
+    this.canonicalTitle,
     this.description,
     this.averageRating,
     this.ageRatingGuide,
     this.posterImage,
     this.coverImage,
-    this.episodeCount,
-    this.episodeLenght,
+    this.episodeLength,
     this.status,
     this.userCount,
-    this.favouriateCount,
+    this.favoritesCount,
     this.startDate,
     this.endDate,
-    this.youtubeId,
+    this.youtubeVideoId,
+  });
+}
+
+class MovieItem {
+  final String id;
+  final String type;
+  final Attributes attributes;
+
+  MovieItem({
+    this.id,
+    this.type,
+    this.attributes,
   });
 
   MovieItem.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         type = json['type'],
-        title = json['attributes']['canonicalTitle'],
-        description = json['attributes']['description'],
-        averageRating = json['attributes']['averageRating'],
-        ageRatingGuide = json['attributes']['ageRatingGuide'],
-        posterImage = json['attributes']['posterImage']['small'],
-
-        /// handling bug for no cover image items
-        coverImage = json['attributes']['coverImage'] != null
-            ? json['attributes']['coverImage']['small']
-            : "",
-        episodeCount = json['attributes']['episodeCount'],
-        episodeLenght = json['attributes']['episodeLength'],
-        status = json['attributes']['status'],
-        userCount = json['attributes']['userCount'],
-        favouriateCount = json['attributes']['favoritesCount'],
-        startDate = json['attributes']['startDate'],
-        endDate = json['attributes']['endDate'],
-        youtubeId = json['attributes']['youtubeVideoId'];
+        attributes = Attributes(
+          canonicalTitle: json['attributes']['canonicalTitle'],
+          description: json['attributes']['description'],
+          averageRating: json['attributes']['averageRating'],
+          ageRatingGuide: json['attributes']['ageRatingGuide'],
+          posterImage: json['attributes']['posterImage']['small'],
+          coverImage: json['attributes']['coverImage'] != null
+              ? json['attributes']['coverImage']['small']
+              : "",
+          episodeLength: json['attributes']['episodeLength'],
+          status: json['attributes']['status'],
+          userCount: json['attributes']['userCount'],
+          favoritesCount: json['attributes']['favoritesCount'],
+          startDate: json['attributes']['startDate'],
+          endDate: json['attributes']['endDate'],
+          youtubeVideoId: json['attributes']['youtubeVideoId'],
+        );
 }
